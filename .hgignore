@@ -1,0 +1,3 @@
+\.pyc$
+^result\.html$
+^result/.*\.html$

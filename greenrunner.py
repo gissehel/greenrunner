@@ -300,13 +300,13 @@ class GreenRunner(QuickWebRip) :
                         });
                         $('.loading').slideUp(1500, function() { $body.addClass('show-all'); });
                     })</script>
-                    <div class='loading'><div class='loading-text'>Chargement en cours...</div></div>
-                    <div class='multichoices'><div id='filter-complete' class='choice'>Complet</div><div id='filter-partial' class='choice'>Partiel</div><div id='filter-error' class='choice'>Erreurs</div></div>
-                    """)
+                    <div class='loading'><div class='loading-text'>%s</div></div>
+                    <div class='multichoices'><div id='filter-complete' class='choice'>%s</div><div id='filter-partial' class='choice'>%s</div><div id='filter-error' class='choice'>%s</div></div>
+                    """ % ("Chargement en cours...","Complet","Partiel","Erreurs"))
                 
                 # Writting title and generation date and time.
                 self.write(handle_total, handle_index, '''<h1 class="main-title">%s</h1>\n''' % (main_title, ))
-                self.write(handle_total, handle_index, '''<h2 class="generation-date">Generation : %04d-%02d-%02d %02d:%02d:%02d</h2>\n''' % (current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec))
+                self.write(handle_total, handle_index, '''<h2 class="generation-date">%s : %04d-%02d-%02d %02d:%02d:%02d</h2>\n''' % ("Generation", current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec))
                 
                 # And the main big table...
                 self.write(handle_total, handle_index, '''<table class="conf_specificationList green_accordion">\n''')
@@ -395,8 +395,9 @@ class GreenRunner(QuickWebRip) :
         
     def format_total_result_line(self, total) :
         """Format the 'total' line into a line of html table"""
-        return '''<tr class="total-line"><td colspan="3" class="tests-total %s">Total</td><td class="test-success total %s">%s</td><td class="test-failures total %s">%s</td><td class="test-errors total %s">%s</td><td class="test-ignored total %s">%s</td><td class="test-sut total">%s</td></tr>\n''' % (
+        return '''<tr class="total-line"><td colspan="3" class="tests-total %s">%s</td><td class="test-success total %s">%s</td><td class="test-failures total %s">%s</td><td class="test-errors total %s">%s</td><td class="test-ignored total %s">%s</td><td class="test-sut total">%s</td></tr>\n''' % (
             'result-success' if ((total['failures']==0) and (total['errors']==0)) else 'result-failure',
+            'Total',
             'no-value' if total['success']==0 else 'values',
             total['success'],
             'no-value' if total['failures']==0 else 'values',
