@@ -9,6 +9,12 @@ import os
 import sys
 import time
 import posixpath
+import gettext
+import codecs
+import locale
+
+# Set up message catalog access
+gettext.install('greenrunner','locale',unicode=True,names=['ngettext'])
 
 class GreenRunner(QuickWebRip) :
     """GreenRunner class can generate reports from an execution of a serie of tests contained in a green pepper page."""
@@ -52,9 +58,9 @@ class GreenRunner(QuickWebRip) :
         result = self._web.post(posixpath.join(self._gproot, self.login_url),postargs={'os_username':self._login,'os_password':self._password},nocache=True)
         
         if result is None :
-            raise Exception("login impossible. Proxy problem ? Web server problem ?")
+            raise Exception(_("login impossible. Proxy problem ? Web server problem ?"))
         if "logout.action" not in result :
-            raise Exception("Authentification failed. Check your login/password.")
+            raise Exception(_("Authentification failed. Check your login/password."))
         
     def log(self, string) :
         """Log a string on stdout. Usefull to check what the software is doing."""
@@ -72,50 +78,60 @@ class GreenRunner(QuickWebRip) :
                           dest="pageid", 
                           default="11337747",
                           type="int",
-                          help="L'index de la page a executer",
+                          help=_("Page id to execute"),
                           )
         parser.add_option('-o', '--output',
                           dest="output_filename",
                           default="result.html",
                           action="store",
-                          help="Le nom du fichier rapport",
+                          help=_("Report filename"),
                           )
         parser.add_option('-d', '--dir',
                           dest="output_directory",
                           default="result",
                           action="store",
-                          help="Le nom du dossier rapport page a page",
+                          help=_("Report folder name"),
                           )
         parser.add_option('-v', '--verbose',
                           dest="verbose",
                           default=True,
                           action="store_true",
-                          help="Mode verbose",
+                          help=_("Verbose mode"),
                           )
         parser.add_option('-q', '--quiet',
                           dest="verbose",
                           action="store_false",
-                          help="Mode quiet",
+                          help=_("Quiet mode"),
                           )
         parser.add_option('-l', '--login',
                           dest="login",
                           default=None,
                           action="store",
-                          help="login",
+                          help=_("Login"),
                           )
         parser.add_option('-p', '--password',
                           dest="password",
                           default=None,
                           action="store",
-                          help="password",
+                          help=_("Password"),
                           )
         parser.add_option('-r','--greenpepper-root',
                           dest='gproot',
                           default=None,
                           action="store",
-                          help="Root of GP site",
+                          help=_("Root of GP site"),
+                          )
+        parser.add_option('-L', '--lang',
+                          dest="lang",
+                          default=None,
+                          action="store",
+                          help=_("Language"),
                           )
         options, remainder = parser.parse_args()
+
+        if not(options.lang is None):
+            os.environ['LANGUAGE'] = options.lang
+            gettext.install('greenrunner','locale',unicode=True,names=['ngettext'])
 
         # Le mode verbose can be changed from command line        
         self._verbose = options.verbose
@@ -130,7 +146,7 @@ class GreenRunner(QuickWebRip) :
         self._gproot = self.get_config('gproot') if (options.gproot is None) else options.gproot
 
         if self._gproot is None :
-            raise Exception("No Green Pepper root web server provided. Where should I connect ?")
+            raise Exception(_("No Green Pepper root web server provided. Where should I connect ?"))
 
         # Login on the web server.
         self.login()
@@ -173,6 +189,8 @@ class GreenRunner(QuickWebRip) :
             
             # Posting params on the web site to execute the test and store the result
             content_page = self._web.get( url=posixpath.join(self._gproot, self.runaction_url), postargs=params )
+
+            content_page = content_page.decode('utf-8') if content_page is not None else u''
             
             # Getting title and url of the page from execution result.
             title = self.get_title(content_page)
@@ -182,12 +200,12 @@ class GreenRunner(QuickWebRip) :
             page_key, page_result = self.re_find_result.findall(content_page)[0]
             page_key_splitted = map(lambda s:s.strip(' ').strip("'"), page_key.split(','))
             page_result_splitted = map(lambda s:s.strip(' ').strip("'"), page_result.split(','))
-            
+   
             # self.log(title)
             # Saving result page in it's own file
             page_filename = 'result_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
             page_full_filename = os.path.join(output_dirname,page_filename)
-            with open(page_full_filename,'wb') as handle :
+            with codecs.open(page_full_filename,'wb',encoding='utf-8') as handle :
                 handle.write(header % {'title':title})
                 handle.write(content_page)
                 handle.write(footer)
@@ -252,8 +270,8 @@ class GreenRunner(QuickWebRip) :
         execution_ok = False
         
         # Opening two handles, one for the main report, one for the page per page report.
-        with open(output_filename,'wb') as handle_total :
-            with open(output_index_filename,'wb') as handle_index :
+        with codecs.open(output_filename,'wb',encoding='utf-8') as handle_total :
+            with codecs.open(output_index_filename,'wb',encoding='utf-8') as handle_index :
                 # Writting header in both pages
                 self.write(handle_total, handle_index, header % {'title': main_title})
 
@@ -302,11 +320,11 @@ class GreenRunner(QuickWebRip) :
                     })</script>
                     <div class='loading'><div class='loading-text'>%s</div></div>
                     <div class='multichoices'><div id='filter-complete' class='choice'>%s</div><div id='filter-partial' class='choice'>%s</div><div id='filter-error' class='choice'>%s</div></div>
-                    """ % ("Chargement en cours...","Complet","Partiel","Erreurs"))
+                    """ % (_("Loading in progress..."),_("Complete"),_("Partial"),_("Errors")))
                 
                 # Writting title and generation date and time.
                 self.write(handle_total, handle_index, '''<h1 class="main-title">%s</h1>\n''' % (main_title, ))
-                self.write(handle_total, handle_index, '''<h2 class="generation-date">%s : %04d-%02d-%02d %02d:%02d:%02d</h2>\n''' % ("Generation", current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec))
+                self.write(handle_total, handle_index, '''<h2 class="generation-date">%s : %04d-%02d-%02d %02d:%02d:%02d</h2>\n''' % (_("Generation"), current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec))
                 
                 # And the main big table...
                 self.write(handle_total, handle_index, '''<table class="conf_specificationList green_accordion">\n''')
@@ -351,14 +369,14 @@ class GreenRunner(QuickWebRip) :
 
     def format_header_line(self) :
         line = '''<tr class="header-line"><th class="test-id">%s</th><th class="test-title">%s</th><th class="test-link">%s</th><th class="test-success">%s</th><th class="test-failures">%s</th><th class="test-errors">%s</th><th class="test-ignored">%s</th><th class="test-sut">%s</th></tr><tr class="sub-header-line"></tr>\n''' % (
-            'No',
-            'Titre',
-            'Lien',
-            'Succes',
-            'Echec',
-            'Erreur',
-            'Ignore',
-            'Environnement execution',
+            _('#'),
+            _('Title'),
+            _('Link'),
+            _('Success'),
+            _('Failure'),
+            _('Error'),
+            _('Ignored'),
+            _('sut'),
             )
         return line            
         
@@ -397,7 +415,7 @@ class GreenRunner(QuickWebRip) :
         """Format the 'total' line into a line of html table"""
         return '''<tr class="total-line"><td colspan="3" class="tests-total %s">%s</td><td class="test-success total %s">%s</td><td class="test-failures total %s">%s</td><td class="test-errors total %s">%s</td><td class="test-ignored total %s">%s</td><td class="test-sut total">%s</td></tr>\n''' % (
             'result-success' if ((total['failures']==0) and (total['errors']==0)) else 'result-failure',
-            'Total',
+            _('Total'),
             'no-value' if total['success']==0 else 'values',
             total['success'],
             'no-value' if total['failures']==0 else 'values',

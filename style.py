@@ -1,4 +1,4 @@
-css = '''
+css = u'''
 body {
     margin: 0px 10px;
 }
@@ -339,7 +339,7 @@ tr > span {
 
 '''
 
-header = '''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+header = u'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
@@ -367,7 +367,7 @@ var conf_greenPepper = {
 <body>
 
 '''
-footer = '''
+footer = u'''
 </body>
 </html>
 '''
