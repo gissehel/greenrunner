@@ -337,6 +337,11 @@ tr > span {
     border-color: #2a92d4;
 }
 
+.footer {
+    font-size: 10px;
+    text-align: right;
+    margin-top: 10px;
+}
 '''
 
 header = u'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -368,6 +373,7 @@ var conf_greenPepper = {
 
 '''
 footer = u'''
+<div class='footer'>%(footer_message)s</div>
 </body>
 </html>
 '''
