@@ -14,7 +14,7 @@ import codecs
 import locale
 
 # Set up message catalog access
-gettext.install('greenrunner','locale',unicode=True,names=['ngettext'])
+gettext.install('greenrunner',os.path.join(os.path.dirname(sys.argv[0]),'locale'),unicode=True,names=['ngettext'])
 
 class GreenRunner(QuickWebRip) :
     """GreenRunner class can generate reports from an execution of a serie of tests contained in a green pepper page."""
@@ -131,7 +131,7 @@ class GreenRunner(QuickWebRip) :
 
         if not(options.lang is None):
             os.environ['LANGUAGE'] = options.lang
-            gettext.install('greenrunner','locale',unicode=True,names=['ngettext'])
+            gettext.install('greenrunner',os.path.join(os.path.dirname(sys.argv[0]),'locale'),unicode=True,names=['ngettext'])
 
         # Le mode verbose can be changed from command line        
         self._verbose = options.verbose
