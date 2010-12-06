@@ -67,7 +67,7 @@ class GreenRunner(QuickWebRip) :
 
         if self._verbose :
             current_time = time.localtime()
-            print '''[%04d-%02d-%02d %02d:%02d:%02d] %s''' % (current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec, string)
+            print (u'''[%04d-%02d-%02d %02d:%02d:%02d] %s''' % (current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec, string)).encode('utf-8')
         
     def run(self) :
         """Main entry point for the class."""
