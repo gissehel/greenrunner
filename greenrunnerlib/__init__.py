@@ -208,6 +208,9 @@ class GreenRunner(QuickWebRip) :
                 page_key, page_result = self.re_find_result.findall(content_page)[0]
                 page_key_splitted = map(lambda s:s.strip(' ').strip("'"), page_key.split(','))
                 page_result_splitted = map(lambda s:s.strip(' ').strip("'"), page_result.split(','))
+
+                if url is None :
+                  url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
                 
                 # The result yield is just a dictionnary with all informations needed and preparsed.
                 result = {
@@ -224,9 +227,9 @@ class GreenRunner(QuickWebRip) :
                     'ignored' : int(page_result_splitted[4]), # if count != 3 else 1,
                     }
             except IOError :
-                url = posixpath.join(self._gproot, self.viewpage_url) % (params['fieldId'],)
+                url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
                 result = {
-                    'content_page' : _('Connexion failed'),
+                    'content_page' : _('Connection failed'),
                     'id' : params['fieldId'],
                     'title' : url,
                     'filename' : '',
@@ -250,7 +253,7 @@ class GreenRunner(QuickWebRip) :
             result['noerrors'] = (result['failures'] == 0) and  (result['errors'] == 0)
             
             # Logging on stdout in case the one who launched the test got bored.
-            self.log("%s %s (%d, %d, %d, %d)" % ( "    " if result['noerrors'] else "[KO]", title, result['success'], result['failures'], result['errors'], result['ignored'] ))
+            self.log("%s %s (%d, %d, %d, %d)" % ( "    " if result['noerrors'] else "[KO]", result['title'], result['success'], result['failures'], result['errors'], result['ignored'] ))
             
             # Yielding result
             yield result

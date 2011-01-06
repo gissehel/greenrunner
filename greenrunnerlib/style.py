@@ -4,7 +4,7 @@ body {
 }
 
 body, td, th, div {
-    font-family: Calibri, "Segoe UI", "Trebuchet MS", "Verdana";
+    font-family: Calibri, "Segoe UI", "Trebuchet MS", "Verdana", Helvetica, Arial, sans-serif;
 }
 
 h2.generation-date,
