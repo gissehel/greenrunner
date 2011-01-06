@@ -170,10 +170,10 @@ class WebUrllib2(object) :
             if self._sleep_on_get is not None :
                 time.sleep(self._sleep_on_get)
         except IOError :
-            print "IOError"
+            # print "IOError"
             pass
         except socket.error :
-            print "socket.error"
+            # print "socket.error"
             pass
         return result
 
