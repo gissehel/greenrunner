@@ -269,6 +269,9 @@ class GreenRunner(QuickWebRip) :
         # Folder is created if not exists
         if not(os.path.exists(output_dirname)) :
             os.makedirs(output_dirname)
+        else :
+            for filename in os.listdir(output_dirname) :
+                os.unlink(os.path.join(output_dirname, filename))
 
         # Getting web page content
         index_content = self._web.get( url=posixpath.join(self._gproot, self.viewpage_url) % (page_id,) )
@@ -296,6 +299,7 @@ class GreenRunner(QuickWebRip) :
         with codecs.open(output_filename,'wb',encoding='utf-8') as handle_total :
             with codecs.open(output_index_filename,'wb',encoding='utf-8') as handle_index :
                 # Writting header in both pages
+                main_title = main_title.decode('iso-8859-1')
                 self.write(handle_total, handle_index, header % {'title': main_title})
 
                 # Writting the "flipflop" and javascript sugar on the main report
