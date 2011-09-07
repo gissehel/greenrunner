@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+#encoding:utf-8
 from __future__ import with_statement
 from webrip import QuickWebRip
 from web import ResolvUrl
-from style import header, footer
+from style import header, footer, flipflopjs
 import optparse
 import re
 import os
@@ -12,6 +13,7 @@ import posixpath
 import gettext
 import codecs
 import locale
+import subprocess
 
 # Set up message catalog access
 gettext.install('greenrunner',os.path.join(os.path.dirname(sys.argv[0]),'locale'),unicode=True,names=['ngettext'])
@@ -127,6 +129,12 @@ class GreenRunner(QuickWebRip) :
                           action="store",
                           help=_("Language"),
                           )
+        parser.add_option('-c', '--command-line',
+                          dest="commandline",
+                          default=None,
+                          action="store",
+                          help=_("Command line for local execution"),
+                          )
         options, remainder = parser.parse_args()
 
         if not(options.lang is None):
@@ -145,6 +153,9 @@ class GreenRunner(QuickWebRip) :
         # Green pepper root can be put in the configuration file, and overridden with the commande line.
         self._gproot = self.get_config('gproot') if (options.gproot is None) else options.gproot
 
+        # Green pepper root can be put in the configuration file, and overridden with the commande line.
+        self._commandline = self.get_config('commandline') if (options.commandline is None) else options.commandline
+
         if self._gproot is None :
             raise Exception(_("No Green Pepper root web server provided. Where should I connect ?"))
 
@@ -154,6 +165,14 @@ class GreenRunner(QuickWebRip) :
         if not( self.run_tag_page( options.pageid, options.output_filename, options.output_directory ) ) :
             sys.exit(1)
 
+    def find_between(self, data, start_data, stop_data) :
+        start_index = data.find(start_data)
+        stop_index = data.find(stop_data, start_index+len(start_data))
+        if start_index == -1 :
+            return None
+        if stop_index == -1 :
+            return None
+        return data[start_index+len(start_data):stop_index]
     def get_test_results(self, index_content, output_dirname) :
         """Execute a serie of tests. 
             Take as input a page containing the serie of tests to execute
@@ -187,62 +206,109 @@ class GreenRunner(QuickWebRip) :
             # Removing of "javascript_action" that doesn't need to be posted
             del params['javascript_action']
             
-            # self.log(title)
             # Saving result page in it's own file
-            page_filename = 'result_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
-            page_full_filename = os.path.join(output_dirname,page_filename)
-
-            try :
-                # Posting params on the web site to execute the test and store the result
-                content_page = self._web.get( url=posixpath.join(self._gproot, self.runaction_url), postargs=params )
-                if content_page is None :
-                    raise IOError()
-
-                content_page = content_page.decode('utf-8') if content_page is not None else u''
-                
-                # Getting title and url of the page from execution result.
-                title = self.get_title(content_page)
-                url = self.get_url(content_page)
-                
-                # Getting execution result (number of succes, number of failure, number of errors, number of ignored)
-                page_key, page_result = self.re_find_result.findall(content_page)[0]
-                page_key_splitted = map(lambda s:s.strip(' ').strip("'"), page_key.split(','))
-                page_result_splitted = map(lambda s:s.strip(' ').strip("'"), page_result.split(','))
-
-                if url is None :
-                  url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
-                
-                # The result yield is just a dictionnary with all informations needed and preparsed.
-                result = {
-                    'content_page' : content_page,
-                    'id' : params['fieldId'],
-                    'title' : title,
-                    'filename' : page_filename,
-                    'url' : url,
-                    'sut' : params['sutInfo'],
-                    'results' : page_result_splitted,
-                    'success' : int(page_result_splitted[1]),
-                    'failures' : int(page_result_splitted[2]), # if count != 5 else 6,
-                    'errors' : int(page_result_splitted[3]), # if count != 8 else 3,
-                    'ignored' : int(page_result_splitted[4]), # if count != 3 else 1,
-                    }
-            except IOError :
+            report_page_filename = 'result_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
+            report_page_full_filename = os.path.join(output_dirname,report_page_filename)
+            
+            
+            if self._commandline is not None :
                 url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
-                result = {
-                    'content_page' : _('Connection failed'),
-                    'id' : params['fieldId'],
-                    'title' : url,
-                    'filename' : '',
-                    'url' : url,
-                    'sut' : params['sutInfo'],
-                    'results' : None,
-                    'success' : 0,
-                    'failures' : 1, # if count != 5 else 6,
-                    'errors' : 0, # if count != 8 else 3,
-                    'ignored' : 0, # if count != 3 else 1,
-                    }
+                sourcecontent_page = self._web.get( url=url )
+                
+                raw_page_filename = 'raw_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
+                raw_page_full_filename = os.path.join(output_dirname,raw_page_filename)
+                
+                source_page_filename = 'source_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
+                source_page_full_filename = os.path.join(output_dirname,source_page_filename)
+                
+                
+                with open(source_page_full_filename,'wb') as handle :
+                    handle.write(self.find_between(sourcecontent_page, '<!-- wiki content -->', '<!--\n<rdf:RDF'))
+                title = self.find_between(sourcecontent_page, 'dc:title="', '"')
+                url = self.find_between(sourcecontent_page,'rdf:about="','"')
+                ### 
+                    
+                args = self._commandline.split('|')
+                args.append(source_page_full_filename)
+                args.append(raw_page_full_filename)
+                p = subprocess.call( args, stdout=subprocess.PIPE, stderr=subprocess.PIPE )
 
-            with codecs.open(page_full_filename,'wb',encoding='utf-8') as handle :
+                
+                with codecs.open(raw_page_full_filename,'rb',encoding='Windows-1252') as handle :
+                    content_raw = handle.read()
+
+                os.unlink(raw_page_full_filename)
+                os.unlink(source_page_full_filename)
+                
+                result = {
+                        'content_page' : self.find_between(content_raw,'<results><![CDATA[',']]></results>'),
+                        'id' : params['fieldId'],
+                        'title' : title,
+                        'filename' : report_page_filename,
+                        'url' : url,
+                        'sut' : params['sutInfo'],
+                        # Ok, here I should use an XML API.
+                        'success' : int(self.find_between(content_raw,'<success>','</success>')),
+                        'failures' : int(self.find_between(content_raw,'<failure>','</failure>')), # if count != 5 else 6,
+                        'errors' : int(self.find_between(content_raw,'<error>','</error>')), # if count != 8 else 3,
+                        'ignored' : int(self.find_between(content_raw,'<ignored>','</ignored>')), # if count != 3 else 1,
+                        }
+                result['results'] = None
+                
+                
+            else : 
+                
+                try :
+                    # Posting params on the web site to execute the test and store the result
+                    content_page = self._web.get( url=posixpath.join(self._gproot, self.runaction_url), postargs=params )
+                    if content_page is None :
+                        raise IOError()
+                
+                    content_page = content_page.decode('utf-8') if content_page is not None else u''
+                    
+                    # Getting title and url of the page from execution result.
+                    title = self.get_title(content_page)
+                    url = self.get_url(content_page)
+                    
+                    # Getting execution result (number of succes, number of failure, number of errors, number of ignored)
+                    page_key, page_result = self.re_find_result.findall(content_page)[0]
+                    page_key_splitted = map(lambda s:s.strip(' ').strip("'"), page_key.split(','))
+                    page_result_splitted = map(lambda s:s.strip(' ').strip("'"), page_result.split(','))
+                
+                    if url is None :
+                      url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
+                    
+                    # The result yield is just a dictionnary with all informations needed and preparsed.
+                    result = {
+                        'content_page' : content_page,
+                        'id' : params['fieldId'],
+                        'title' : title,
+                        'filename' : report_page_filename,
+                        'url' : url,
+                        'sut' : params['sutInfo'],
+                        'results' : page_result_splitted,
+                        'success' : int(page_result_splitted[1]),
+                        'failures' : int(page_result_splitted[2]), # if count != 5 else 6,
+                        'errors' : int(page_result_splitted[3]), # if count != 8 else 3,
+                        'ignored' : int(page_result_splitted[4]), # if count != 3 else 1,
+                        }
+                except IOError :
+                    url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
+                    result = {
+                        'content_page' : _('Connection failed'),
+                        'id' : params['fieldId'],
+                        'title' : url,
+                        'filename' : '',
+                        'url' : url,
+                        'sut' : params['sutInfo'],
+                        'results' : None,
+                        'success' : 0,
+                        'failures' : 1, # if count != 5 else 6,
+                        'errors' : 0, # if count != 8 else 3,
+                        'ignored' : 0, # if count != 3 else 1,
+                        }
+
+            with codecs.open(report_page_full_filename,'wb',encoding='utf-8') as handle :
                 handle.write(header % {'title':result['title']})
                 handle.write(result['content_page'])
                 handle.write(footer % {'footer_message':_('Page generated by %s') % '<a href="http://code.google.com/p/greenrunner">GreenRunner</a>'})
@@ -273,8 +339,9 @@ class GreenRunner(QuickWebRip) :
             for filename in os.listdir(output_dirname) :
                 os.unlink(os.path.join(output_dirname, filename))
 
+        summury_page_url = posixpath.join(self._gproot, self.viewpage_url) % (page_id,)
         # Getting web page content
-        index_content = self._web.get( url=posixpath.join(self._gproot, self.viewpage_url) % (page_id,) )
+        index_content = self._web.get( url=summury_page_url )
         
         if index_content is None :
             raise Exception("No test page found for the id [%s]" % page_id)
@@ -303,55 +370,13 @@ class GreenRunner(QuickWebRip) :
                 self.write(handle_total, handle_index, header % {'title': main_title})
 
                 # Writting the "flipflop" and javascript sugar on the main report
-                handle_total.write("""<script type='text/javascript'>
-                    jQuery(function($){ 
-                        var $body = $('body');
-                        $('.green_accordion > tbody').accordion({ collapsible : true,  animated: false, active : false, autoHeight: false });
-                        $('.main-title').click(function(){
-                            if ($body.hasClass('hide-allok')) {
-                                $body.removeClass('show-all');
-                                $body.removeClass('hide-allok');
-                                $body.addClass('show-onlyerrors');
-                            } else {
-                                if ($body.hasClass('show-onlyerrors')) {
-                                    $body.removeClass('hide-allok');
-                                    $body.removeClass('show-onlyerrors');
-                                    $body.addClass('show-all');
-                                } else {
-                                    $body.removeClass('show-all');
-                                    $body.removeClass('show-onlyerrors');
-                                    $body.addClass('hide-allok');
-                                }
-                            }
-                        });
-                        $('#filter-complete').click(function(){
-                                    $body.addClass('show-all');
-                                    $body.removeClass('hide-allok');
-                                    $body.removeClass('show-onlyerrors');
-                        });
-                        $('#filter-partial').click(function(){
-                                    $body.removeClass('show-all');
-                                    $body.addClass('hide-allok');
-                                    $body.removeClass('show-onlyerrors');
-                        });
-                        $('#filter-error').click(function(){
-                                    $body.removeClass('show-all');
-                                    $body.removeClass('hide-allok');
-                                    $body.addClass('show-onlyerrors');
-                        });
-                        $('.test-link a').click(function(e){
-                            window.open($(this).attr('href'));
-                            e.preventDefault();
-                        });
-                        $('.loading').slideUp(1500, function() { $body.addClass('show-all'); });
-                    })</script>
-                    <div class='loading'><div class='loading-text'>%s</div></div>
-                    <div class='multichoices'><div id='filter-complete' class='choice'>%s</div><div id='filter-partial' class='choice'>%s</div><div id='filter-error' class='choice'>%s</div></div>
-                    """ % (_("Loading in progress..."),_("Complete"),_("Partial"),_("Errors")))
+                handle_total.write(flipflopjs % (_("Loading in progress..."),_("Complete"),_("Partial"),_("Errors")))
                 
                 # Writting title and generation date and time.
                 self.write(handle_total, handle_index, '''<h1 class="main-title">%s</h1>\n''' % (main_title, ))
                 self.write(handle_total, handle_index, '''<h2 class="generation-date">%s : %04d-%02d-%02d %02d:%02d:%02d</h2>\n''' % (_("Generation"), current_time.tm_year, current_time.tm_mon, current_time.tm_mday,current_time.tm_hour, current_time.tm_min, current_time.tm_sec))
+                self.write(handle_total, handle_index, '''<div class="execution-type">%s : %s</div>\n''' % (_("Run mode"),_("Distant run") if (self._commandline is None) else _("Local run")))
+                self.write(handle_total, handle_index, '''<div class="testlist-link">%s <a href="%s">%s</a></div>\n''' % (_("Based on page"),summury_page_url,summury_page_url))
                 
                 # And the main big table...
                 self.write(handle_total, handle_index, '''<table class="conf_specificationList green_accordion">\n''')

@@ -1,3 +1,6 @@
 \.pyc$
 ^result\.html$
 ^result/.*\.html$
+relre:bin/*
+relre:build/*
+glob:greenrunner.txt

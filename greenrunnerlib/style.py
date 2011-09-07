@@ -342,6 +342,10 @@ tr > span {
     text-align: right;
     margin-top: 10px;
 }
+
+.testlist-link {
+    padding-bottom: 5px;
+}
 '''
 
 header = u'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -377,3 +381,49 @@ footer = u'''
 </body>
 </html>
 '''
+
+flipflopjs = u"""<script type='text/javascript'>
+                    jQuery(function($){ 
+                        var $body = $('body');
+                        $('.green_accordion > tbody').accordion({ collapsible : true,  animated: false, active : false, autoHeight: false });
+                        $('.main-title').click(function(){
+                            if ($body.hasClass('hide-allok')) {
+                                $body.removeClass('show-all');
+                                $body.removeClass('hide-allok');
+                                $body.addClass('show-onlyerrors');
+                            } else {
+                                if ($body.hasClass('show-onlyerrors')) {
+                                    $body.removeClass('hide-allok');
+                                    $body.removeClass('show-onlyerrors');
+                                    $body.addClass('show-all');
+                                } else {
+                                    $body.removeClass('show-all');
+                                    $body.removeClass('show-onlyerrors');
+                                    $body.addClass('hide-allok');
+                                }
+                            }
+                        });
+                        $('#filter-complete').click(function(){
+                                    $body.addClass('show-all');
+                                    $body.removeClass('hide-allok');
+                                    $body.removeClass('show-onlyerrors');
+                        });
+                        $('#filter-partial').click(function(){
+                                    $body.removeClass('show-all');
+                                    $body.addClass('hide-allok');
+                                    $body.removeClass('show-onlyerrors');
+                        });
+                        $('#filter-error').click(function(){
+                                    $body.removeClass('show-all');
+                                    $body.removeClass('hide-allok');
+                                    $body.addClass('show-onlyerrors');
+                        });
+                        $('.test-link a').click(function(e){
+                            window.open($(this).attr('href'));
+                            e.preventDefault();
+                        });
+                        $('.loading').slideUp(1500, function() { $body.addClass('show-all'); });
+                    })</script>
+                    <div class='loading'><div class='loading-text'>%s</div></div>
+                    <div class='multichoices'><div id='filter-complete' class='choice'>%s</div><div id='filter-partial' class='choice'>%s</div><div id='filter-error' class='choice'>%s</div></div>
+                    """
