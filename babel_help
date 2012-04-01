@@ -1,0 +1,3 @@
+setup.py extract_messages --output-file locale/greenrunner.pot
+setup.py compile_catalog --domain greenrunner --directory locale --locale fr_FR 
+setup.py update_catalog --domain greenrunner -i locale/greenrunner.pot -o locale/fr_FR/LC_MESSAGES/greenrunner.po -l fr_FR 

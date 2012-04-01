@@ -4,3 +4,5 @@
 relre:bin/*
 relre:build/*
 glob:greenrunner.txt
+syntax: glob
+locale/*/LC_MESSAGES/greenrunner.mo
