@@ -182,7 +182,8 @@ class Parser(QuickWebRip) :
                 args = self._commandline.split('|')
                 args.append(source_page_full_filename)
                 args.append(raw_page_full_filename)
-                p = subprocess.call( args, stdout=subprocess.PIPE, stderr=subprocess.PIPE )
+                subprocess.Popen( args, stdout=subprocess.PIPE, stderr=subprocess.PIPE ).communicate()
+                
 
                 
                 with codecs.open(raw_page_full_filename,'rb',encoding='Windows-1252') as handle :
