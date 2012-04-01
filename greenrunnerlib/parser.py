@@ -164,7 +164,7 @@ class Parser(QuickWebRip) :
             
             if self._commandline is not None :
                 url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
-                sourcecontent_page = self._web.get( url=url )
+                sourcecontent_page = self._web.get( url=url ).decode('utf-8')
                 
                 raw_page_filename = 'raw_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
                 raw_page_full_filename = os.path.join(tmp_dirname,raw_page_filename)
@@ -173,7 +173,7 @@ class Parser(QuickWebRip) :
                 source_page_full_filename = os.path.join(tmp_dirname,source_page_filename)
                 
                 
-                with open(source_page_full_filename,'wb') as handle :
+                with codecs.open(source_page_full_filename,'wb',encoding='utf-8') as handle :
                     handle.write(self.find_between(sourcecontent_page, '<!-- wiki content -->', '<!--\n<rdf:RDF'))
                 title = self.find_between(sourcecontent_page, 'dc:title="', '"')
                 url = self.find_between(sourcecontent_page,'rdf:about="','"')
