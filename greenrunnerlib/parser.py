@@ -59,6 +59,9 @@ class Parser(QuickWebRip) :
         
         # title filters
         self._title_filters = []
+        
+        # .Net mode
+        self._dotnet = False
 
     def add_numeric_filter(self, count) :
         self._has_filter = True
@@ -82,6 +85,9 @@ class Parser(QuickWebRip) :
         
     def set_gp_commandline( self, commandline ) :
         self._commandline = commandline
+        
+    def set_dotnet( self, dotnet ) :
+        self._dotnet = dotnet
         
     def get_report_generator( self ) :
         return self._report_generator
@@ -178,15 +184,20 @@ class Parser(QuickWebRip) :
                 title = self.find_between(sourcecontent_page, 'dc:title="', '"')
                 url = self.find_between(sourcecontent_page,'rdf:about="','"')
                 ### 
-                    
+
+                args.replace('{source}',source_page_full_filename) 
+                args.replace('{output}',raw_page_full_filename) 
+
                 args = self._commandline.split('|')
-                args.append(source_page_full_filename)
-                args.append(raw_page_full_filename)
+                # args.append(source_page_full_filename)
+                # args.append(raw_page_full_filename)
                 subprocess.Popen( args, stdout=subprocess.PIPE, stderr=subprocess.PIPE ).communicate()
                 
-
+                output_encoding = 'utf-8'
+                if self._dotnet :
+                	output_encoding = 'Windows-1252'
                 
-                with codecs.open(raw_page_full_filename,'rb',encoding='Windows-1252') as handle :
+                with codecs.open(raw_page_full_filename,'rb',encoding=output_encoding) as handle :
                     content_raw = handle.read()
 
                 os.unlink(raw_page_full_filename)

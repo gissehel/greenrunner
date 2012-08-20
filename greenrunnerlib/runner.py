@@ -94,6 +94,12 @@ class Runner(object) :
                           action="store",
                           help=_("Command line for local execution"),
                           )
+        parser.add_option('-n', '--dotnet',
+                          dest="dotnet",
+                          default=None,
+                          action="store_true",
+                          help=_(".Net execution"),
+                          )
         options, remainder = parser.parse_args()
 
         if options.pageid is None :
@@ -119,6 +125,9 @@ class Runner(object) :
 
         # Green pepper command-line can be put in the configuration file, and overridden with the commande line.
         gp_parser.set_gp_commandline( gp_parser.get_config('commandline') if (options.commandline is None) else options.commandline )
+        
+        # Green pepper command-line is for .Net
+        gp_parser.set_dotnet( gp_parser.get_config('dotnet') if (options.dotnet is None) else options.dotnet )
         
         self._report_generator = gp_parser.get_report_generator()
 
