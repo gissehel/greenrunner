@@ -185,8 +185,8 @@ class Parser(QuickWebRip) :
                 url = self.find_between(sourcecontent_page,'rdf:about="','"')
                 ### 
 
-                args.replace('{source}',source_page_full_filename) 
-                args.replace('{output}',raw_page_full_filename) 
+                self._commandline.replace('{source}',source_page_full_filename) 
+                self._commandline.replace('{output}',raw_page_full_filename) 
 
                 args = self._commandline.split('|')
                 # args.append(source_page_full_filename)
