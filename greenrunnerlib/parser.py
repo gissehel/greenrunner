@@ -192,17 +192,24 @@ class Parser(QuickWebRip) :
                 url = self.find_between(sourcecontent_page,'rdf:about="','"')
                 ### 
 
-                self._commandline = self._commandline.replace('{source}',source_page_full_filename) 
-                self._commandline = self._commandline.replace('{output}',raw_page_full_filename) 
+                commandline = self._commandline
+                
+                commandline = commandline.replace('{source}',source_page_full_filename) 
+                commandline = commandline.replace('{output}',raw_page_full_filename) 
 
                 popen_args = {} 
                 if self._shell :
-                    args = self._commandline
+                    args = commandline
                     popen_args["shell"] = True
+                    popen_args["stdout"] = sys.stdout
+                    popen_args["stderr"] = sys.stdout
                 else :
-                    args = self._commandline.split('|')
+                    args = commandline.split('|')
+                    popen_args["stdout"] = subprocess.PIPE
+                    popen_args["stderr"] = subprocess.PIPE
                              
-                subprocess.Popen( args, stdout=sys.stdout, stderr=sys.stdout, **popen_args).communicate()                
+                print ( args, popen_args)
+                subprocess.Popen( args, **popen_args).communicate()                
                 
                 output_encoding = 'utf-8'
                 if self._dotnet :

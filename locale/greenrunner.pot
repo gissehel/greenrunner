@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: greenrunner 1.1.2\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-08-23 11:52+0200\n"
+"POT-Creation-Date: 2012-08-23 12:23+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,28 +30,28 @@ msgstr ""
 msgid "Authentification failed. Check your login/password."
 msgstr ""
 
-#: greenrunnerlib/parser.py:272
+#: greenrunnerlib/parser.py:279
 msgid "Connection failed"
 msgstr ""
 
-#: greenrunnerlib/parser.py:321
+#: greenrunnerlib/parser.py:328
 #, python-format
 msgid "No test page found for the id [%s]"
 msgstr ""
 
-#: greenrunnerlib/parser.py:332
+#: greenrunnerlib/parser.py:339
 msgid "Run mode"
 msgstr ""
 
-#: greenrunnerlib/parser.py:332
+#: greenrunnerlib/parser.py:339
 msgid "Distant run"
 msgstr ""
 
-#: greenrunnerlib/parser.py:332
+#: greenrunnerlib/parser.py:339
 msgid "Local run"
 msgstr ""
 
-#: greenrunnerlib/parser.py:333 greenrunnerlib/reportGenerator.py:198
+#: greenrunnerlib/parser.py:340 greenrunnerlib/reportGenerator.py:198
 msgid "Based on page"
 msgstr ""
 
