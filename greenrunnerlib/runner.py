@@ -104,7 +104,7 @@ class Runner(object) :
                           dest="shell",
                           default=None,
                           action="store_true",
-                          help=_("execute command via shell"),
+                          help=_("Execute command via shell"),
                           )
         options, remainder = parser.parse_args()
 
