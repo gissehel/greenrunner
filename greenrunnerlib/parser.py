@@ -208,7 +208,6 @@ class Parser(QuickWebRip) :
                     popen_args["stdout"] = subprocess.PIPE
                     popen_args["stderr"] = subprocess.PIPE
                              
-                print ( args, popen_args)
                 subprocess.Popen( args, **popen_args).communicate()                
                 
                 output_encoding = 'utf-8'
