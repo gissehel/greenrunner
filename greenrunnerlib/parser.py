@@ -223,27 +223,42 @@ class Parser(QuickWebRip) :
                 if self._dotnet :
                     output_encoding = 'Windows-1252'
 
-                with codecs.open(raw_page_full_filename,'rb',encoding=output_encoding) as handle :
-                    content_raw = handle.read()
-
-                os.unlink(raw_page_full_filename)
-                os.unlink(source_page_full_filename)
-
-                result = {
-                        'content_page' : self.find_between(content_raw,'<results><![CDATA[',']]></results>'),
-                        'id' : params['fieldId'],
-                        'count' : count,
-                        'title' : title,
-                        'url' : url,
-                        'sut' : params['sutInfo'],
-                        # Ok, here I should use an XML API.
-                        'success' : int(self.find_between(content_raw,'<success>','</success>')),
-                        'failures' : int(self.find_between(content_raw,'<failure>','</failure>')), # if count != 5 else 6,
-                        'errors' : int(self.find_between(content_raw,'<error>','</error>')), # if count != 8 else 3,
-                        'ignored' : int(self.find_between(content_raw,'<ignored>','</ignored>')), # if count != 3 else 1,
-                        }
-                result['results'] = None
-
+                if os.path.exists(raw_page_full_filename) :
+                    with codecs.open(raw_page_full_filename,'rb',encoding=output_encoding) as handle :
+                        content_raw = handle.read()
+                    
+                    os.unlink(raw_page_full_filename)
+                    os.unlink(source_page_full_filename)
+                    
+                    result = {
+                            'content_page' : self.find_between(content_raw,'<results><![CDATA[',']]></results>'),
+                            'id' : params['fieldId'],
+                            'count' : count,
+                            'title' : title,
+                            'url' : url,
+                            'sut' : params['sutInfo'],
+                            # Ok, here I should use an XML API.
+                            'success' : int(self.find_between(content_raw,'<success>','</success>')),
+                            'failures' : int(self.find_between(content_raw,'<failure>','</failure>')), # if count != 5 else 6,
+                            'errors' : int(self.find_between(content_raw,'<error>','</error>')), # if count != 8 else 3,
+                            'ignored' : int(self.find_between(content_raw,'<ignored>','</ignored>')), # if count != 3 else 1,
+                            }
+                    result['results'] = None
+                else :
+                    os.unlink(source_page_full_filename)
+                    result = {
+                            'content_page' : self.find_between(_('No result found from [%s]') % (commandline,),'<results><![CDATA[',']]></results>'),
+                            'id' : params['fieldId'],
+                            'count' : count,
+                            'title' : title,
+                            'url' : url,
+                            'sut' : params['sutInfo'],
+                            'success' : 0,
+                            'failures' : 1, 
+                            'errors' : 0, 
+                            'ignored' : 0, 
+                            }
+                    result['results'] = None
 
             else :
 
