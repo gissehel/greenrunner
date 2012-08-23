@@ -9,6 +9,7 @@ import os
 import time
 import codecs
 import subprocess
+import sys
 
 class Parser(QuickWebRip) :
     """Parser's role is to parse and/or execute green pepper pages."""
@@ -62,6 +63,9 @@ class Parser(QuickWebRip) :
         
         # .Net mode
         self._dotnet = False
+        
+        # shell mode
+        self._shell = False
 
     def add_numeric_filter(self, count) :
         self._has_filter = True
@@ -88,6 +92,9 @@ class Parser(QuickWebRip) :
         
     def set_dotnet( self, dotnet ) :
         self._dotnet = dotnet
+        
+    def set_shell (self, shell ):
+        self._shell = shell
         
     def get_report_generator( self ) :
         return self._report_generator
@@ -185,13 +192,24 @@ class Parser(QuickWebRip) :
                 url = self.find_between(sourcecontent_page,'rdf:about="','"')
                 ### 
 
-                self._commandline.replace('{source}',source_page_full_filename) 
-                self._commandline.replace('{output}',raw_page_full_filename) 
+                #self._commandline = "java -Xmx764m -Xms128m -XX:MaxPermSize=128m -cp /opt/greenpepper/greenpepper-maven-runner-2.7-complete.jar:/usr/local/maven/apache-maven-2.2.1/boot/classworlds-1.1.jar:/usr/local/maven/apache-maven-2.2.1/lib/maven-2.2.1-uber.jar: com.greenpepper.maven.runner.Main -l fr -f 'com.strator.iris.greenpepper.IrisSpringSystemUnderDevelopment;/gp-server-spring-context.xml' --xml --pdd /opt/hudson/workspace/Iris\ Server\ Project\ Trunk/trunk/server/greenpepper-tests/greenpepper-server/pom.xml"
+                #args = self._commandline + " " + source_page_full_filename + " " +  raw_page_full_filename
+                #, shell=True
+                                
+                self._commandline = self._commandline.replace('{source}',source_page_full_filename) 
+                self._commandline = self._commandline.replace('{output}',raw_page_full_filename) 
 
-                args = self._commandline.split('|')
-                # args.append(source_page_full_filename)
-                # args.append(raw_page_full_filename)
-                subprocess.Popen( args, stdout=subprocess.PIPE, stderr=subprocess.PIPE ).communicate()
+                popen_args = {} 
+                if self._shell :
+                    args = self._commandline
+                    popen_args["shell"] = True
+                else :
+                    args = self._commandline.split('|')
+                             
+                    #args.append(source_page_full_filename)
+                    #args.append(raw_page_full_filename)                 
+                
+                subprocess.Popen( args, stdout=sys.stdout, stderr=sys.stdout, **popen_args).communicate()                
                 
                 output_encoding = 'utf-8'
                 if self._dotnet :

@@ -100,6 +100,12 @@ class Runner(object) :
                           action="store_true",
                           help=_(".Net execution"),
                           )
+        parser.add_option('-s', '--shell',
+                          dest="shell",
+                          default=None,
+                          action="store_true",
+                          help=_("execute command via shell"),
+                          )
         options, remainder = parser.parse_args()
 
         if options.pageid is None :
@@ -128,6 +134,9 @@ class Runner(object) :
         
         # Green pepper command-line is for .Net
         gp_parser.set_dotnet( gp_parser.get_config('dotnet') if (options.dotnet is None) else options.dotnet )
+        
+        # Green pepper command-line is for .Net
+        gp_parser.set_shell( gp_parser.get_config('shell') if (options.shell is None) else options.shell )
         
         self._report_generator = gp_parser.get_report_generator()
 
