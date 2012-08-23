@@ -106,6 +106,12 @@ class Runner(object) :
                           action="store_true",
                           help=_("Execute command via shell"),
                           )
+        parser.add_option('-O', '--command-line-output',
+                          dest="commandline_output",
+                          default=None,
+                          action="store_true",
+                          help=_("Show command line output"),
+                          )
         options, remainder = parser.parse_args()
 
         if options.pageid is None :
@@ -135,8 +141,13 @@ class Runner(object) :
         # Green pepper command-line is for .Net
         gp_parser.set_dotnet( gp_parser.get_config('dotnet') if (options.dotnet is None) else options.dotnet )
         
-        # Green pepper command-line is for .Net
+        # Use shell for commmand line
         gp_parser.set_shell( gp_parser.get_config('shell') if (options.shell is None) else options.shell )
+        
+        # Dump GP output into greenrunner output
+        gp_parser.set_commandline_output( gp_parser.get_config('commandline_output') if (options.commandline_output is None) else options.commandline_output )
+        
+        
         
         self._report_generator = gp_parser.get_report_generator()
 
