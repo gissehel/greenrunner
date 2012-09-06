@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-08-23 15:54+0200\n"
+"POT-Creation-Date: 2012-09-06 07:13+0200\n"
 "PO-Revision-Date: 2011-09-07 13:30+0200\n"
 "Last-Translator: Gissehel <trans.fr_FR.greenrunner@gissehel.org>\n"
 "Language-Team: Gissehel <trans.fr_FR.greenrunner@gissehel.org>\n"
@@ -28,28 +28,33 @@ msgstr "Impossible de s'identifier... Probleme de proxy ? de serveur ?"
 msgid "Authentification failed. Check your login/password."
 msgstr "Echec d'autentification. Verifiez votre login/password."
 
-#: greenrunnerlib/parser.py:287
+#: greenrunnerlib/parser.py:250
+#, python-format
+msgid "No result found from [%s]"
+msgstr "Pas de résultat trouvée pour [%s]"
+
+#: greenrunnerlib/parser.py:302
 msgid "Connection failed"
 msgstr "Echec de connexion"
 
-#: greenrunnerlib/parser.py:336
+#: greenrunnerlib/parser.py:351
 #, python-format
 msgid "No test page found for the id [%s]"
 msgstr "Pas de page trouvée pour l'id [%s]"
 
-#: greenrunnerlib/parser.py:347
+#: greenrunnerlib/parser.py:362
 msgid "Run mode"
 msgstr "Type d'exécution"
 
-#: greenrunnerlib/parser.py:347
+#: greenrunnerlib/parser.py:362
 msgid "Distant run"
 msgstr "Exécution distante"
 
-#: greenrunnerlib/parser.py:347
+#: greenrunnerlib/parser.py:362
 msgid "Local run"
 msgstr "Exécution locale"
 
-#: greenrunnerlib/parser.py:348 greenrunnerlib/reportGenerator.py:198
+#: greenrunnerlib/parser.py:363 greenrunnerlib/reportGenerator.py:198
 msgid "Based on page"
 msgstr "Basé sur la page"
 
@@ -172,7 +177,7 @@ msgstr "Exécute une commande via le shell"
 
 #: greenrunnerlib/runner.py:113
 msgid "Show command line output"
-msgstr ""
+msgstr "Affiche la sortie de la ligne de commande"
 
 #: greenrunnerlib/runner.py:118
 msgid "You must provide a valid page id"
