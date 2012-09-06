@@ -15,19 +15,19 @@ h1.main-title {
 td.test-subpage,
 body {
     background:  #f8f8f8 no-repeat fixed;
-    background: -moz-linear-gradient(-90deg,#ffffff,#dddddd) #f8f8f8 no-repeat fixed;
+    background: -moz-linear-gradient(#ffffff,#dddddd) #f8f8f8 no-repeat fixed;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#dddddd)) #f8f8f8 no-repeat fixed;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ffffff', EndColorStr='#dddddd', GradientType=0);
-    background: linear-gradient(-90deg,#ffffff,#dddddd) #f8f8f8 no-repeat fixed;
+    background: linear-gradient(#ffffff,#dddddd) #f8f8f8 no-repeat fixed;
     
 }
 .panel {
     color: #ffffcc;
     background: #223322 no-repeat fixed;
-    background: -moz-linear-gradient(-90deg,#333333,#223322) #223322 no-repeat fixed;
+    background: -moz-linear-gradient(#333333,#223322) #223322 no-repeat fixed;
     background: -webkit-gradient(linear, left top, left bottom, from(#333333), to(#223322)) #223322 no-repeat fixed;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#333333', EndColorStr='#223322', GradientType=0);
-    background: linear-gradient(-90deg,#333333,#223322) #223322 no-repeat fixed;
+    background: linear-gradient(#333333,#223322) #223322 no-repeat fixed;
     padding: 1px 20px;
     -moz-border-radius : 15px;
          border-radius : 15px;
@@ -131,56 +131,56 @@ h1 a {
     color: #ffffff;
     text-shadow: 0px -1px 1px rgba(0,0,0,0.6);
     background-color: #a9b1bd !important;
-    background: -moz-linear-gradient( -90deg, #a9b1bd, #596273) !important;
+    background: -moz-linear-gradient( #a9b1bd, #596273) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#a9b1bd), to(#596273)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#a9b1bd', EndColorStr='#596273', GradientType=0);
-    background:      linear-gradient( -90deg, #a9b1bd, #596273) !important;
+    background:      linear-gradient( #a9b1bd, #596273) !important;
 }
 
 td.no-value {
     background-color: #cccccc !important;
-    background: -moz-linear-gradient( -90deg, #eeeeee, #cccccc) !important;
+    background: -moz-linear-gradient( #eeeeee, #cccccc) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#eeeeee), to(#cccccc)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#eeeeee', EndColorStr='#cccccc', GradientType=0);
-    background:      linear-gradient( -90deg, #eeeeee, #cccccc) !important;
+    background:      linear-gradient( #eeeeee, #cccccc) !important;
 }
 
 td.result-success,
 td.values.test-success {
     background-color: #aaffaa !important;
-    background: -moz-linear-gradient( -90deg, #ccffcc, #aaffaa) !important;
+    background: -moz-linear-gradient( #ccffcc, #aaffaa) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#ccffcc), to(#aaffaa)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ccffcc', EndColorStr='#aaffaa', GradientType=0);
-    background:      linear-gradient( -90deg, #ccffcc, #aaffaa) !important;
+    background:      linear-gradient( #ccffcc, #aaffaa) !important;
 }
 
 td.result-failure,
 td.values.test-failures,
 td.values.test-errors {
     background-color: #ffaaaa !important;
-    background: -moz-linear-gradient( -90deg, #ffcccc, #ffaaaa) !important;
+    background: -moz-linear-gradient( #ffcccc, #ffaaaa) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffcccc), to(#ffaaaa)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ffcccc', EndColorStr='#ffaaaa', GradientType=0);
-    background:      linear-gradient( -90deg, #ffcccc, #ffaaaa) !important;
+    background:      linear-gradient( #ffcccc, #ffaaaa) !important;
 }
 
 td.result-ignored,
 td.values.test-ignored {
     background-color: #ffffaa !important;
-    background: -moz-linear-gradient( -90deg, #ffffcc, #ffffaa) !important;
+    background: -moz-linear-gradient( #ffffcc, #ffffaa) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffcc), to(#ffffaa)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ffffcc', EndColorStr='#ffffaa', GradientType=0);
-    background:      linear-gradient( -90deg, #ffffcc, #ffffaa) !important;
+    background:      linear-gradient( #ffffcc, #ffffaa) !important;
 }
 
 td.test-title,
 td.test-link,
 td.test-sut {
     background-color: #ffffff !important;
-    background: -moz-linear-gradient( -90deg, #ffffff, #eeeeee) !important;
+    background: -moz-linear-gradient( #ffffff, #eeeeee) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ffffff', EndColorStr='#eeeeee', GradientType=0);
-    background:      linear-gradient( -90deg, #ffffff, #eeeeee) !important;
+    background:      linear-gradient( #ffffff, #eeeeee) !important;
 }
 
 
@@ -253,10 +253,10 @@ tr > span {
     padding: 15px 40px 20px 40px;
     
     background-color: #ff3388 !important;
-    background: -moz-linear-gradient( -90deg, #ff3388, #770022) !important;
+    background: -moz-linear-gradient( #ff3388, #770022) !important;
     background: -webkit-gradient(linear, left top, left bottom, from(#ff3388), to(#770022)) !important;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ff3388', EndColorStr='#770022', GradientType=0);
-    background:      linear-gradient( -90deg, #ff3388, #770022) !important;
+    background:      linear-gradient( #ff3388, #770022) !important;
 }
 
 .show-all .loading,
@@ -301,10 +301,10 @@ tr > span {
 
 .multichoices .choice {
     background:  #f8f8f8 no-repeat;
-    background: -moz-linear-gradient(-90deg,#ffffff,#c8c8c8) #f8f8f8 no-repeat;
+    background: -moz-linear-gradient(#ffffff,#c8c8c8) #f8f8f8 no-repeat;
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#c8c8c8)) #f8f8f8 no-repeat;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#ffffff', EndColorStr='#c8c8c8', GradientType=0);
-    background: linear-gradient(-90deg,#ffffff,#c8c8c8) #f8f8f8 no-repeat;
+    background: linear-gradient(#ffffff,#c8c8c8) #f8f8f8 no-repeat;
     cursor: pointer;
 }
 
@@ -327,10 +327,10 @@ tr > span {
 .multichoices .choice.selected {
     font-weight: bold;
     background:  #55b6f2 no-repeat;
-    background: -moz-linear-gradient(-90deg,#2a92d4,#55b6f2) #55b6f2 no-repeat;
+    background: -moz-linear-gradient(#2a92d4,#55b6f2) #55b6f2 no-repeat;
     background: -webkit-gradient(linear, left top, left bottom, from(#2a92d4), to(#55b6f2)) #55b6f2 no-repeat;
     filter: progid:DXImageTransform.Microsoft.Gradient( StartColorStr='#2a92d4', EndColorStr='#55b6f2', GradientType=0);
-    background: linear-gradient(-90deg,#2a92d4,#55b6f2) #55b6f2 no-repeat;
+    background: linear-gradient(#2a92d4,#55b6f2) #55b6f2 no-repeat;
     
     color: #ffffff;
     text-shadow: 0px -1px 0px rgba(0,0,0,0.6);
@@ -354,8 +354,8 @@ header = u'''<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>%(title)s</title>
-<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-<script type='text/javascript' src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
 <script type='text/javascript'>
 var conf_greenPepper = {
     getSpecification : function() {
