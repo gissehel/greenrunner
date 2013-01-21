@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version:  0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2012-09-06 07:13+0200\n"
+"POT-Creation-Date: 2013-01-21 11:18+0100\n"
 "PO-Revision-Date: 2011-09-07 13:30+0200\n"
 "Last-Translator: Gissehel <trans.fr_FR.greenrunner@gissehel.org>\n"
 "Language-Team: Gissehel <trans.fr_FR.greenrunner@gissehel.org>\n"
@@ -16,45 +16,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
 
-#: greenrunnerlib/parser.py:111
+#: greenrunnerlib/parser.py:117
 msgid "No Green Pepper root web server provided. Where should I connect ?"
 msgstr "Aucun site Green Pepper fourni. Ou dois-je me connecter ?"
 
-#: greenrunnerlib/parser.py:117
+#: greenrunnerlib/parser.py:123
 msgid "login impossible. Proxy problem ? Web server problem ?"
 msgstr "Impossible de s'identifier... Probleme de proxy ? de serveur ?"
 
-#: greenrunnerlib/parser.py:119
+#: greenrunnerlib/parser.py:125
 msgid "Authentification failed. Check your login/password."
 msgstr "Echec d'autentification. Verifiez votre login/password."
 
-#: greenrunnerlib/parser.py:250
+#: greenrunnerlib/parser.py:276
 #, python-format
 msgid "No result found from [%s]"
 msgstr "Pas de résultat trouvée pour [%s]"
 
-#: greenrunnerlib/parser.py:302
+#: greenrunnerlib/parser.py:328
 msgid "Connection failed"
 msgstr "Echec de connexion"
 
-#: greenrunnerlib/parser.py:351
+#: greenrunnerlib/parser.py:377
 #, python-format
 msgid "No test page found for the id [%s]"
 msgstr "Pas de page trouvée pour l'id [%s]"
 
-#: greenrunnerlib/parser.py:362
+#: greenrunnerlib/parser.py:388
 msgid "Run mode"
 msgstr "Type d'exécution"
 
-#: greenrunnerlib/parser.py:362
+#: greenrunnerlib/parser.py:388
 msgid "Distant run"
 msgstr "Exécution distante"
 
-#: greenrunnerlib/parser.py:362
+#: greenrunnerlib/parser.py:388
 msgid "Local run"
 msgstr "Exécution locale"
 
-#: greenrunnerlib/parser.py:363 greenrunnerlib/reportGenerator.py:198
+#: greenrunnerlib/parser.py:389 greenrunnerlib/reportGenerator.py:198
 msgid "Based on page"
 msgstr "Basé sur la page"
 
@@ -179,7 +179,11 @@ msgstr "Exécute une commande via le shell"
 msgid "Show command line output"
 msgstr "Affiche la sortie de la ligne de commande"
 
-#: greenrunnerlib/runner.py:118
+#: greenrunnerlib/runner.py:119
+msgid "Log greenpepper output into a directory"
+msgstr "Log la sortie de greenpepper dans un répertoire"
+
+#: greenrunnerlib/runner.py:124
 msgid "You must provide a valid page id"
 msgstr "Vous devez fournir un id de page valide"
 

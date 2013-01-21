@@ -7,7 +7,7 @@ import sys
 
 setup_args = {
     'name':'greenrunner',
-    'version':'1.1.6',
+    'version':'1.1.7',
     'description':'Run a set of green paper page alredy included in a greenpepper labels page, and generate a report that can be archived',
     'url':'http://code.google.com/p/greenrunner/',
     'author':'Gissehel',

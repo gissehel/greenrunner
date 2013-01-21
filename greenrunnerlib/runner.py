@@ -112,6 +112,12 @@ class Runner(object) :
                           action="store_true",
                           help=_("Show command line output"),
                           )
+        parser.add_option('--gp-log-dir',
+                          dest="logdir",
+                          default=None,
+                          action="store",
+                          help=_("Log greenpepper output into a directory"),
+                          )
         options, remainder = parser.parse_args()
 
         if options.pageid is None :
@@ -146,6 +152,10 @@ class Runner(object) :
         
         # Dump GP output into greenrunner output
         gp_parser.set_commandline_output( gp_parser.get_config('commandline_output') if (options.commandline_output is None) else options.commandline_output )
+        
+        # Use logdir for gp output
+        gp_parser.set_logdir( gp_parser.get_config('logdir') if (options.logdir is None) else options.logdir )
+        
         
         
         

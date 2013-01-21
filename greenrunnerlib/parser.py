@@ -69,6 +69,9 @@ class Parser(QuickWebRip) :
 
         self._commandline_output = False
 
+        # for gp logs        
+        self._logdir = None
+
     def add_numeric_filter(self, count) :
         self._has_filter = True
         self._numeric_filters.append(count)
@@ -100,6 +103,9 @@ class Parser(QuickWebRip) :
 
     def set_commandline_output( self, commandline_output ):
         self._commandline_output = commandline_output
+        
+    def set_logdir( self, logdir ) :
+        self._logdir = logdir
 
     def get_report_generator( self ) :
         return self._report_generator
@@ -153,6 +159,14 @@ class Parser(QuickWebRip) :
         else :
             for filename in os.listdir(tmp_dirname) :
                 os.unlink(os.path.join(tmp_dirname, filename))
+
+        if self._logdir is not None :
+            # Folder is created if not exists
+            if not(os.path.exists(self._logdir)) :
+                os.makedirs(self._logdir)
+            else :
+                for filename in os.listdir(self._logdir) :
+                    os.unlink(os.path.join(self._logdir, filename))
 
         count = 0
 
@@ -216,8 +230,20 @@ class Parser(QuickWebRip) :
                     popen_args["stdout"]=sys.stdout
                     popen_args["stderr"]=sys.stdout
 
+                log_handle = None
+                
+                if self._logdir is not None :
+                    filename = os.path.join(self._logdir, 'output-%04d.log'%(count,))
+                    log_handle = codecs.open(filename,'wb',encoding='utf-8')
+
+                    popen_args["stdout"]=log_handle
+                    popen_args["stderr"]=log_handle
 
                 subprocess.Popen( args, **popen_args).communicate()
+                
+                if log_handle is not None :
+                    log_handle.close()
+                    log_handle = None
 
                 output_encoding = 'utf-8'
                 if self._dotnet :
