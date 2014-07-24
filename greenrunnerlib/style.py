@@ -378,6 +378,44 @@ var conf_greenPepper = {
 '''
 footer = u'''
 <div class='footer'>%(footer_message)s</div>
+<script>
+jQuery(function($){
+  $('[id*="GP_INCLUDE"]').each(function(index,element){
+    var $element = $(element);
+    var isTitle = (index % 2) == 0;
+    var label = $element.attr('id');
+    var idSwitch = label.substring(label.indexOf('GP_INCLUDE_'));
+    $element.attr('data-target',idSwitch);
+    element.attributes.removeNamedItem('onclick');
+    $element.addClass('gpinclude');
+    if (isTitle) 
+    {
+        $element.addClass('gpinclude-link');
+    }
+    else
+    {
+        $element.addClass('gpinclude-block');
+        element.style.removeProperty('display');
+        $element.addClass('hidden');
+    }
+  });
+  $('.gpinclude').click(function(e){
+    var $this = $(this);
+    var dataTargetId = $this.attr('data-target');
+    var $dataTarget = $('#'+dataTargetId);
+    if ($dataTarget.hasClass('hidden'))
+    {
+       $dataTarget.removeClass('hidden');
+    }
+    else
+    {
+      $dataTarget.addClass('hidden');
+    }
+    e.preventDefault();
+    e.stopPropagation();
+  });
+});
+</script>
 </body>
 </html>
 '''
@@ -423,7 +461,9 @@ flipflopjs = u"""<script type='text/javascript'>
                             e.preventDefault();
                         });
                         $('.loading').slideUp(1500, function() { $body.addClass('show-all'); });
-                    })</script>
+                    })
+                    
+                    </script>
                     <div class='loading'><div class='loading-text'>%s</div></div>
                     <div class='multichoices'><div id='filter-complete' class='choice'>%s</div><div id='filter-partial' class='choice'>%s</div><div id='filter-error' class='choice'>%s</div></div>
                     """
