@@ -382,7 +382,7 @@ footer = u'''
 jQuery(function($){
   $('[id*="GP_INCLUDE"]').each(function(index,element){
     var $element = $(element);
-    var isTitle = (index % 2) == 0;
+    var isTitle = (index %% 2) == 0;
     var label = $element.attr('id');
     var idSwitch = label.substring(label.indexOf('GP_INCLUDE_'));
     $element.attr('data-target',idSwitch);
