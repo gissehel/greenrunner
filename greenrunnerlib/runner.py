@@ -100,6 +100,12 @@ class Runner(object) :
                           action="store_true",
                           help=_(".Net execution"),
                           )
+        parser.add_option('-K', '--keep-temp-files',
+                          dest="keep_temp_files",
+                          default=None,
+                          action="store_true",
+                          help=_("Keep temporary files"),
+                          )
         parser.add_option('-s', '--shell',
                           dest="shell",
                           default=None,
@@ -146,6 +152,9 @@ class Runner(object) :
         
         # Green pepper command-line is for .Net
         gp_parser.set_dotnet( gp_parser.get_config('dotnet') if (options.dotnet is None) else options.dotnet )
+
+        # Keep source and raw files
+        gp_parser.set_keep_temp_files( gp_parser.get_config('keep_temp_files') if (options.keep_temp_files is None) else options.keep_temp_files )
         
         # Use shell for commmand line
         gp_parser.set_shell( gp_parser.get_config('shell') if (options.shell is None) else options.shell )

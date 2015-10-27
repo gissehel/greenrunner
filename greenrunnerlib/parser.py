@@ -63,6 +63,9 @@ class Parser(QuickWebRip) :
 
         # .Net mode
         self._dotnet = False
+        
+        # Keep temp files
+        self._keep_temp_files = False
 
         # shell mode
         self._shell = False
@@ -98,6 +101,9 @@ class Parser(QuickWebRip) :
     def set_dotnet( self, dotnet ) :
         self._dotnet = dotnet
 
+    def set_keep_temp_files( self, keep_temp_files ) :
+        self._keep_temp_files = keep_temp_files
+        
     def set_shell( self, shell ):
         self._shell = shell
 
@@ -198,6 +204,14 @@ class Parser(QuickWebRip) :
                 url = posixpath.join(self._gproot, self.viewpage_url) % (params['pageId'],)
                 sourcecontent_page = self._web.get( url=url ).decode('utf-8')
 
+                page_filename = 'page_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
+                page_full_filename = os.path.join(tmp_dirname,page_filename)
+                
+                if self._keep_temp_files :
+                    with codecs.open(page_full_filename,'wb',encoding='utf-8') as handle :
+                        handle.write(sourcecontent_page)
+                    
+                
                 raw_page_filename = 'raw_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
                 raw_page_full_filename = os.path.join(tmp_dirname,raw_page_filename)
 
@@ -253,8 +267,9 @@ class Parser(QuickWebRip) :
                     with codecs.open(raw_page_full_filename,'rb',encoding=output_encoding) as handle :
                         content_raw = handle.read()
                     
-                    os.unlink(raw_page_full_filename)
-                    os.unlink(source_page_full_filename)
+                    if self._keep_temp_files :
+                        os.unlink(raw_page_full_filename)
+                        os.unlink(source_page_full_filename)
                     
                     result = {
                             'content_page' : self.find_between(content_raw,'<results><![CDATA[',']]></results>'),
