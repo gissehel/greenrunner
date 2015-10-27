@@ -206,12 +206,11 @@ class Parser(QuickWebRip) :
 
                 page_filename = 'page_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
                 page_full_filename = os.path.join(tmp_dirname,page_filename)
-                
+
                 if self._keep_temp_files :
                     with codecs.open(page_full_filename,'wb',encoding='utf-8') as handle :
                         handle.write(sourcecontent_page)
-                    
-                
+
                 raw_page_filename = 'raw_%s_%s_%s.html' % (params['bulkUID'],params['executionUID'],params['fieldId'])
                 raw_page_full_filename = os.path.join(tmp_dirname,raw_page_filename)
 
@@ -267,7 +266,7 @@ class Parser(QuickWebRip) :
                     with codecs.open(raw_page_full_filename,'rb',encoding=output_encoding) as handle :
                         content_raw = handle.read()
                     
-                    if self._keep_temp_files :
+                    if ! self._keep_temp_files :
                         os.unlink(raw_page_full_filename)
                         os.unlink(source_page_full_filename)
                     
@@ -368,9 +367,10 @@ class Parser(QuickWebRip) :
             # Yielding result
             yield result
 
-        for filename in os.listdir(tmp_dirname) :
-            os.unlink(os.path.join(tmp_dirname, filename))
-        os.rmdir(tmp_dirname)
+        if !self._keep_temp_files :
+            for filename in os.listdir(tmp_dirname) :
+                os.unlink(os.path.join(tmp_dirname, filename))
+            os.rmdir(tmp_dirname)
 
     def run_tag_page(self, page_id) :
         """Execute a serie of tests and generate report
