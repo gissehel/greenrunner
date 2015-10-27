@@ -266,7 +266,7 @@ class Parser(QuickWebRip) :
                     with codecs.open(raw_page_full_filename,'rb',encoding=output_encoding) as handle :
                         content_raw = handle.read()
                     
-                    if ! self._keep_temp_files :
+                    if not(self._keep_temp_files) :
                         os.unlink(raw_page_full_filename)
                         os.unlink(source_page_full_filename)
                     
@@ -367,7 +367,7 @@ class Parser(QuickWebRip) :
             # Yielding result
             yield result
 
-        if !self._keep_temp_files :
+        if not(self._keep_temp_files) :
             for filename in os.listdir(tmp_dirname) :
                 os.unlink(os.path.join(tmp_dirname, filename))
             os.rmdir(tmp_dirname)
